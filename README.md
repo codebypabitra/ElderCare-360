@@ -1,7 +1,28 @@
 # ElderCare 360 — Smarter Care. Safer Living. Connected Families.
 
 > **AI-Powered Preventive Elderly Care and Family Coordination Platform**  
-> *Hackathon Execution Blueprint & Production-Ready Prototype*
+> *Fully Connected to Live Supabase PostgreSQL with Real-Time Telemetry Sync*
+
+---
+
+## ⚡ Live Supabase Realtime Telemetry Connected
+
+This application is connected directly to your cloud Supabase database:
+- **Project URL:** `https://msheryqagewdcdgyvxbg.supabase.co`
+- **Key:** `sb_publishable_TZhqvKdigZzaDZeHUWyVXw_wCEpyxJ6`
+- **Realtime Postgres Replication:** Active across `medications`, `medication_logs`, `health_readings`, `emergency_events`, `care_tasks`, and `notifications`.
+
+---
+
+## 🚀 Setting Up & Seeding Your Supabase Database
+
+To populate your Supabase PostgreSQL database with the complete clinical seed data (Mr. Ramesh, Priya, Sunita, Dr. Anil, medications, health vitals, emergency contacts, and care tasks):
+
+1. Open your Supabase Project's SQL Editor:  
+   👉 **[https://supabase.com/dashboard/project/msheryqagewdcdgyvxbg/sql/new](https://supabase.com/dashboard/project/msheryqagewdcdgyvxbg/sql/new)**
+2. Copy and paste the entire script from **[`supabase/setup_and_seed.sql`](supabase/setup_and_seed.sql)** into the SQL editor.
+3. Click **Run** (or `Ctrl + Enter`).
+4. That's it! Your tables, policies, and seed rows are immediately live, and any modifications from the web app will directly insert, update, and sync across all connected clients in real time!
 
 ---
 
@@ -34,7 +55,7 @@ $$\text{Care Score} = 0.40 \times \text{Adherence} + 0.25 \times \text{Tasks} + 
 | **AI Prescription OCR Studio** | `/doctor/prescriptions` | Upload medical slips, run simulated OCR entity extraction, verify confidence, and commit to schedules |
 | **Simulation Lab (Judge Center)** | `/demo` | **Interactive demo control center** to simulate falls, missed doses, high BP spikes, low stock, and measure real metrics |
 | **Health Reports Dossier** | `/reports` | Printable/exportable clinical care summary with evidence-based AI insights |
-| **Settings & Thresholds** | `/settings` | Configurable clinician BP/grace limits, notification channels, and Supabase status |
+| **Settings & Supabase Sync** | `/settings` | Live Supabase latency tester, sync triggers, threshold configurations, and SQL setup scripts |
 
 ---
 
@@ -43,8 +64,8 @@ $$\text{Care Score} = 0.40 \times \text{Adherence} + 0.25 \times \text{Tasks} + 
 - **Frontend:** React 19 + TypeScript + Vite
 - **Styling:** Tailwind CSS v4 + Accessible UI Design (Large fonts, high contrast, WCAG compliant)
 - **Data Visualizations:** Recharts (Multi-metric physiological charts)
-- **State & Telemetry:** Dynamic React Context with persistence & live simulation processor
-- **Backend & Database:** PostgreSQL via Supabase Schema (`supabase/schema.sql` with Row Level Security)
+- **State & Telemetry:** Dynamic React Context with live Supabase client & real-time Postgres channels
+- **Backend & Database:** PostgreSQL via Supabase Schema (`supabase/setup_and_seed.sql` with Realtime Publications)
 - **Icons & UI:** Lucide React + CVA (Class Variance Authority)
 
 ---
@@ -67,42 +88,3 @@ Open your browser at `http://localhost:5173`.
 npm run build
 ```
 Generates production-optimized chunks in `dist/`.
-
----
-
-## 🧪 Hackathon Judge Demo Script (3-Minute Tour)
-
-1. **Act 1 — Introduce Mr. Ramesh (Age 72):**
-   - Navigate to `/` and click **"Try as Patient"** (Mr. Ramesh Kumar).
-   - Show the simple high-contrast dashboard. Click **"I Took This ✓"** on his morning Amlodipine.
-   - Point out the **Care Intelligence Score (86/100)** update.
-
-2. **Act 2 — Regional AI Companion:**
-   - Go to `/patient/assistant`.
-   - Click the Odia query: *"Explain my medicines in simple Odia (ଓଡ଼ିଆରେ କୁହନ୍ତୁ)"*.
-   - Click the **"Listen"** voice button to hear the synthesized audio.
-
-3. **Act 3 — Emergency & Fall Detection:**
-   - Go to `/patient/emergency` and click **"Simulate Motion Fall Event"**.
-   - Show the 15-second countdown banner (*"Mr. Ramesh, are you unhurt?"*).
-   - Let it expire or press *"I Need Help"* to show the live escalation.
-
-4. **Act 4 — Family Oversight:**
-   - Click **"Switch Account"** in sidebar and select **Priya Kumar (Family)**.
-   - Observe the real-time missed-dose notification and emergency banner on `/family/dashboard`.
-
-5. **Act 5 — AI Prescription OCR Scanner:**
-   - Switch to **Dr. Anil Sharma (Doctor)**.
-   - Go to `/doctor/prescriptions`. Click the cardiology sample slip.
-   - Watch the AI extract **Telmisartan 40mg**, **Atorvastatin 10mg**, and **Multivitamin**.
-   - Click **"Approve & Schedule For Patient"** to verify automatic schedule creation.
-
-6. **Act 6 — Interactive Simulation Lab:**
-   - Visit `/demo` to show the judges live measurable outcomes: scheduled doses, taken vs missed counts, and live telemetry triggers.
-
----
-
-## 🛡️ India DPDP Act 2023 Compliance
-- Explicit consent recorded in `public.care_relationships`.
-- Patient-owned emergency contacts priority chain.
-- No hallucinations: All AI explanations are grounded strictly in stored health and medication rows.

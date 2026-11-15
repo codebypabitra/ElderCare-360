@@ -1,8 +1,9 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
 import type {
   User, UserRole, Medication, MedicationLog, MedicationSchedule,
   HealthReading, EmergencyEvent, AppNotification, CareTask,
-  SimulationEvent, CareIntelligenceScore, DoseStatus,
+  SimulationEvent, CareIntelligenceScore, DoseStatus, PatientProfile,
+  CareRelationship, EmergencyContact, Appointment, AIInsight
 } from '@/types'
 import {
   DEMO_USERS, DEMO_MEDICATIONS, DEMO_MEDICATION_LOGS, DEMO_SCHEDULES,
@@ -11,6 +12,32 @@ import {
   DEMO_CARE_RELATIONSHIPS, DEMO_EMERGENCY_CONTACTS, DEMO_APPOINTMENTS,
 } from '@/data/mock-data'
 import { generateId, calculateAdherence } from '@/lib/utils'
+import { isSupabaseConfigured } from '@/lib/supabase'
+import {
+  fetchUsersFromSupabase,
+  fetchMedicationsFromSupabase,
+  fetchSchedulesFromSupabase,
+  fetchMedicationLogsFromSupabase,
+  fetchHealthReadingsFromSupabase,
+  fetchEmergencyEventsFromSupabase,
+  fetchNotificationsFromSupabase,
+  fetchCareTasksFromSupabase,
+  fetchAIInsightsFromSupabase,
+  fetchAppointmentsFromSupabase,
+  fetchEmergencyContactsFromSupabase,
+  fetchPatientProfilesFromSupabase,
+  fetchCareRelationshipsFromSupabase,
+  insertMedicationIntoSupabase,
+  deleteMedicationFromSupabase,
+  updateMedicationLogStatusInSupabase,
+  insertHealthReadingIntoSupabase,
+  insertEmergencyEventIntoSupabase,
+  updateEmergencyEventInSupabase,
+  insertNotificationIntoSupabase,
+  markNotificationReadInSupabase,
+  updateCareTaskInSupabase,
+  subscribeToSupabaseRealtime,
+} from '@/services/supabaseService'
 
 interface AppState {
   currentUser: User | null
@@ -22,6 +49,14 @@ interface AppState {
   notifications: AppNotification[]
   careTasks: CareTask[]
   simulationEvents: SimulationEvent[]
+  patientProfiles: PatientProfile[]
+  careRelationships: CareRelationship[]
+  emergencyContacts: EmergencyContact[]
+  appointments: Appointment[]
+  aiInsights: AIInsight[]
+  isLiveSupabase: boolean
+  isSyncing: boolean
+  lastSyncedAt: Date | null
 }
 
 interface AppContextType extends AppState {
@@ -29,26 +64,29 @@ interface AppContextType extends AppState {
   login: (role: UserRole) => void
   logout: () => void
 
+  // Sync
+  refreshFromSupabase: () => Promise<void>
+
   // Medications
-  addMedication: (med: Omit<Medication, 'id' | 'created_at'>) => void
-  updateMedicationLog: (logId: string, status: DoseStatus) => void
-  deleteMedication: (id: string) => void
+  addMedication: (med: Omit<Medication, 'id' | 'created_at'>) => Promise<void>
+  updateMedicationLog: (logId: string, status: DoseStatus) => Promise<void>
+  deleteMedication: (id: string) => Promise<void>
 
   // Health
-  addHealthReading: (reading: Omit<HealthReading, 'id'>) => void
+  addHealthReading: (reading: Omit<HealthReading, 'id'>) => Promise<void>
 
   // Emergency
-  triggerSOS: (description?: string) => void
-  triggerFallDetection: () => void
-  resolveEmergency: (eventId: string) => void
-  acknowledgeEmergency: (eventId: string) => void
+  triggerSOS: (description?: string) => Promise<void>
+  triggerFallDetection: () => Promise<void>
+  resolveEmergency: (eventId: string) => Promise<void>
+  acknowledgeEmergency: (eventId: string) => Promise<void>
 
   // Notifications
-  markNotificationRead: (id: string) => void
-  addNotification: (notif: Omit<AppNotification, 'id' | 'created_at'>) => void
+  markNotificationRead: (id: string) => Promise<void>
+  addNotification: (notif: Omit<AppNotification, 'id' | 'created_at'>) => Promise<void>
 
   // Care Tasks
-  updateTaskStatus: (taskId: string, status: CareTask['status']) => void
+  updateTaskStatus: (taskId: string, status: CareTask['status']) => Promise<void>
 
   // Simulation
   triggerSimulation: (event: Omit<SimulationEvent, 'id' | 'timestamp' | 'processed'>) => void
@@ -59,53 +97,148 @@ interface AppContextType extends AppState {
   getAdherenceRate: () => number
   getTodaysMedications: () => MedicationLog[]
   getUnreadNotificationCount: () => number
-  getPatientProfiles: () => typeof DEMO_PATIENT_PROFILES
-  getCareRelationships: () => typeof DEMO_CARE_RELATIONSHIPS
-  getEmergencyContacts: () => typeof DEMO_EMERGENCY_CONTACTS
-  getAppointments: () => typeof DEMO_APPOINTMENTS
-  getAIInsights: () => typeof DEMO_AI_INSIGHTS
+  getPatientProfiles: () => PatientProfile[]
+  getCareRelationships: () => CareRelationship[]
+  getEmergencyContacts: () => EmergencyContact[]
+  getAppointments: () => Appointment[]
+  getAIInsights: () => AIInsight[]
 }
 
 const AppContext = createContext<AppContextType | null>(null)
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [usersList, setUsersList] = useState<User[]>(DEMO_USERS)
   const [medications, setMedications] = useState<Medication[]>(DEMO_MEDICATIONS)
-  const [schedules] = useState<MedicationSchedule[]>(DEMO_SCHEDULES)
+  const [schedules, setSchedules] = useState<MedicationSchedule[]>(DEMO_SCHEDULES)
   const [medicationLogs, setMedicationLogs] = useState<MedicationLog[]>(DEMO_MEDICATION_LOGS)
   const [healthReadings, setHealthReadings] = useState<HealthReading[]>(DEMO_HEALTH_READINGS)
   const [emergencyEvents, setEmergencyEvents] = useState<EmergencyEvent[]>(DEMO_EMERGENCY_EVENTS)
   const [notifications, setNotifications] = useState<AppNotification[]>(DEMO_NOTIFICATIONS)
   const [careTasks, setCareTasks] = useState<CareTask[]>(DEMO_CARE_TASKS)
+  const [patientProfiles, setPatientProfiles] = useState<PatientProfile[]>(DEMO_PATIENT_PROFILES)
+  const [careRelationships, setCareRelationships] = useState<CareRelationship[]>(DEMO_CARE_RELATIONSHIPS)
+  const [emergencyContacts, setEmergencyContacts] = useState<EmergencyContact[]>(DEMO_EMERGENCY_CONTACTS)
+  const [appointments, setAppointments] = useState<Appointment[]>(DEMO_APPOINTMENTS)
+  const [aiInsights, setAiInsights] = useState<AIInsight[]>(DEMO_AI_INSIGHTS)
   const [simulationEvents, setSimulationEvents] = useState<SimulationEvent[]>([])
+
+  const [isLiveSupabase] = useState<boolean>(isSupabaseConfigured())
+  const [isSyncing, setIsSyncing] = useState<boolean>(false)
+  const [lastSyncedAt, setLastSyncedAt] = useState<Date | null>(null)
+
+  // ==========================================================================
+  // FETCH ALL DATA DIRECTLY FROM SUPABASE
+  // ==========================================================================
+  const refreshFromSupabase = useCallback(async () => {
+    setIsSyncing(true)
+    try {
+      const [
+        u, meds, scheds, logs, readings, emergencies, notifs, tasks, insights, apts, contacts, profiles, rels
+      ] = await Promise.all([
+        fetchUsersFromSupabase(),
+        fetchMedicationsFromSupabase(),
+        fetchSchedulesFromSupabase(),
+        fetchMedicationLogsFromSupabase(),
+        fetchHealthReadingsFromSupabase(),
+        fetchEmergencyEventsFromSupabase(),
+        fetchNotificationsFromSupabase(),
+        fetchCareTasksFromSupabase(),
+        fetchAIInsightsFromSupabase(),
+        fetchAppointmentsFromSupabase(),
+        fetchEmergencyContactsFromSupabase(),
+        fetchPatientProfilesFromSupabase(),
+        fetchCareRelationshipsFromSupabase(),
+      ])
+
+      setUsersList(u)
+      setMedications(meds)
+      setSchedules(scheds)
+      setMedicationLogs(logs)
+      setHealthReadings(readings)
+      setEmergencyEvents(emergencies)
+      setNotifications(notifs)
+      setCareTasks(tasks)
+      setAiInsights(insights)
+      setAppointments(apts)
+      setEmergencyContacts(contacts)
+      setPatientProfiles(profiles)
+      setCareRelationships(rels)
+      setLastSyncedAt(new Date())
+    } catch (err) {
+      console.warn('Supabase initial fetch encountered error:', err)
+    } finally {
+      setIsSyncing(false)
+    }
+  }, [])
+
+  // Initial mount load
+  useEffect(() => {
+    refreshFromSupabase()
+
+    // Realtime Postgres Subscription
+    const unsubscribe = subscribeToSupabaseRealtime((table, payload) => {
+      console.log(`⚡ Supabase Realtime [${table}] ->`, payload)
+      // When changes happen remotely in Supabase, sync immediately!
+      refreshFromSupabase()
+    })
+
+    return () => {
+      unsubscribe()
+    }
+  }, [refreshFromSupabase])
 
   // === Auth ===
   const login = useCallback((role: UserRole) => {
-    const user = DEMO_USERS.find(u => u.role === role)
+    const user = usersList.find(u => u.role === role) || DEMO_USERS.find(u => u.role === role)
     if (user) setCurrentUser(user)
-  }, [])
+  }, [usersList])
 
   const logout = useCallback(() => {
     setCurrentUser(null)
   }, [])
 
+  // === Notifications Helper ===
+  const addNotification = useCallback(async (notif: Omit<AppNotification, 'id' | 'created_at'>) => {
+    const newNotif: AppNotification = {
+      ...notif,
+      id: generateId(),
+      created_at: new Date().toISOString(),
+    }
+    // Optimistic
+    setNotifications(prev => [newNotif, ...prev])
+    // Supabase
+    await insertNotificationIntoSupabase(newNotif)
+  }, [])
+
+  const markNotificationRead = useCallback(async (id: string) => {
+    setNotifications(prev =>
+      prev.map(n => (n.id === id ? { ...n, read_at: new Date().toISOString() } : n))
+    )
+    await markNotificationReadInSupabase(id)
+  }, [])
+
   // === Medications ===
-  const addMedication = useCallback((med: Omit<Medication, 'id' | 'created_at'>) => {
+  const addMedication = useCallback(async (med: Omit<Medication, 'id' | 'created_at'>) => {
     const newMed: Medication = {
       ...med,
       id: generateId(),
       created_at: new Date().toISOString(),
     }
-    setMedications(prev => [...prev, newMed])
+    // Optimistic update
+    setMedications(prev => [newMed, ...prev])
+    // Supabase direct write
+    await insertMedicationIntoSupabase(newMed)
+
     addNotification({
-      user_id: 'user-patient-001',
-      title: 'New Medication Added',
-      message: `${med.medicine_name} ${med.dosage} has been added to your schedule.`,
+      user_id: 'd1a1b1c1-0001-4000-8000-000000000001',
+      title: 'New Medication Added (Live Supabase)',
+      message: `${med.medicine_name} ${med.dosage} has been committed to database.`,
       type: 'system',
     })
-  }, [])
+  }, [addNotification])
 
-  const updateMedicationLog = useCallback((logId: string, status: DoseStatus) => {
+  const updateMedicationLog = useCallback(async (logId: string, status: DoseStatus) => {
     setMedicationLogs(prev =>
       prev.map(log =>
         log.id === logId
@@ -114,34 +247,39 @@ export function AppProvider({ children }: { children: ReactNode }) {
       )
     )
 
+    // Supabase update
+    await updateMedicationLogStatusInSupabase(logId, status)
+
     if (status === 'missed') {
       addNotification({
-        user_id: 'user-family-001',
+        user_id: 'd1a1b1c1-0002-4000-8000-000000000002',
         title: 'Missed Dose Alert',
-        message: 'A scheduled medication dose was missed. Please check on the patient.',
+        message: 'A scheduled medication dose was marked missed in Supabase.',
         type: 'missed_dose',
       })
     }
-  }, [])
+  }, [addNotification])
 
-  const deleteMedication = useCallback((id: string) => {
+  const deleteMedication = useCallback(async (id: string) => {
     setMedications(prev => prev.filter(m => m.id !== id))
+    await deleteMedicationFromSupabase(id)
   }, [])
 
   // === Health ===
-  const addHealthReading = useCallback((reading: Omit<HealthReading, 'id'>) => {
+  const addHealthReading = useCallback(async (reading: Omit<HealthReading, 'id'>) => {
     const newReading: HealthReading = {
       ...reading,
       id: generateId(),
     }
     setHealthReadings(prev => [...prev, newReading])
+    await insertHealthReadingIntoSupabase(newReading)
   }, [])
 
   // === Emergency ===
-  const triggerSOS = useCallback((description?: string) => {
+  const triggerSOS = useCallback(async (description?: string) => {
     const event: EmergencyEvent = {
       id: generateId(),
-      patient_id: 'patient-001',
+      patient_id: 'e1a1b1c1-0001-4000-8000-000000000001',
       event_type: 'sos',
       status: 'open',
       severity: 'critical',
@@ -149,24 +287,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
       created_at: new Date().toISOString(),
     }
     setEmergencyEvents(prev => [event, ...prev])
-    addNotification({
-      user_id: 'user-family-001',
-      title: '🚨 Emergency SOS',
-      message: 'Ramesh Kumar has activated the emergency SOS button!',
-      type: 'emergency',
-    })
-    addNotification({
-      user_id: 'user-caregiver-001',
-      title: '🚨 Emergency SOS',
-      message: 'Ramesh Kumar has activated the emergency SOS button!',
-      type: 'emergency',
-    })
-  }, [])
+    await insertEmergencyEventIntoSupabase(event)
 
-  const triggerFallDetection = useCallback(() => {
+    addNotification({
+      user_id: 'd1a1b1c1-0002-4000-8000-000000000002',
+      title: '🚨 Emergency SOS Broadcast',
+      message: 'Ramesh Kumar has activated the emergency SOS button! Live alert stored in Supabase.',
+      type: 'emergency',
+    })
+  }, [addNotification])
+
+  const triggerFallDetection = useCallback(async () => {
     const event: EmergencyEvent = {
       id: generateId(),
-      patient_id: 'patient-001',
+      patient_id: 'e1a1b1c1-0001-4000-8000-000000000001',
       event_type: 'fall_detected',
       status: 'open',
       severity: 'high',
@@ -174,15 +308,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
       created_at: new Date().toISOString(),
     }
     setEmergencyEvents(prev => [event, ...prev])
+    await insertEmergencyEventIntoSupabase(event)
+
     addNotification({
-      user_id: 'user-family-001',
+      user_id: 'd1a1b1c1-0002-4000-8000-000000000002',
       title: '⚠️ Fall Detected',
-      message: 'A potential fall has been detected for Ramesh Kumar. Awaiting confirmation.',
+      message: 'A potential fall has been detected for Ramesh Kumar and synced to Supabase.',
       type: 'emergency',
     })
-  }, [])
+  }, [addNotification])
 
-  const resolveEmergency = useCallback((eventId: string) => {
+  const resolveEmergency = useCallback(async (eventId: string) => {
     setEmergencyEvents(prev =>
       prev.map(e =>
         e.id === eventId
@@ -190,9 +326,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
           : e
       )
     )
+    await updateEmergencyEventInSupabase(eventId, {
+      status: 'resolved',
+      resolved_at: new Date().toISOString(),
+    })
   }, [])
 
-  const acknowledgeEmergency = useCallback((eventId: string) => {
+  const acknowledgeEmergency = useCallback(async (eventId: string) => {
     setEmergencyEvents(prev =>
       prev.map(e =>
         e.id === eventId
@@ -200,35 +340,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
           : e
       )
     )
+    await updateEmergencyEventInSupabase(eventId, {
+      status: 'acknowledged',
+      acknowledged_by: currentUser?.id,
+    })
   }, [currentUser])
 
-  // === Notifications ===
-  const addNotification = useCallback((notif: Omit<AppNotification, 'id' | 'created_at'>) => {
-    const newNotif: AppNotification = {
-      ...notif,
-      id: generateId(),
-      created_at: new Date().toISOString(),
-    }
-    setNotifications(prev => [newNotif, ...prev])
-  }, [])
-
-  const markNotificationRead = useCallback((id: string) => {
-    setNotifications(prev =>
-      prev.map(n =>
-        n.id === id ? { ...n, read_at: new Date().toISOString() } : n
-      )
-    )
-  }, [])
-
   // === Care Tasks ===
-  const updateTaskStatus = useCallback((taskId: string, status: CareTask['status']) => {
+  const updateTaskStatus = useCallback(async (taskId: string, status: CareTask['status']) => {
+    const completed_at = status === 'completed' ? new Date().toISOString() : undefined
     setCareTasks(prev =>
       prev.map(t =>
-        t.id === taskId
-          ? { ...t, status, completed_at: status === 'completed' ? new Date().toISOString() : undefined }
-          : t
+        t.id === taskId ? { ...t, status, completed_at } : t
       )
     )
+    await updateCareTaskInSupabase(taskId, { status, completed_at })
   }, [])
 
   // === Simulation ===
@@ -241,77 +367,60 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
     setSimulationEvents(prev => [simEvent, ...prev])
 
-    // Process simulation effect
     switch (event.type) {
       case 'missed_medication':
-        updateMedicationLog(
-          medicationLogs.find(l => l.status === 'upcoming')?.id || '',
-          'missed'
-        )
+        if (medicationLogs.length > 0) {
+          const upcoming = medicationLogs.find(l => l.status === 'upcoming') || medicationLogs[0]
+          updateMedicationLog(upcoming.id, 'missed')
+        }
         break
       case 'fall_detected':
         triggerFallDetection()
         break
       case 'emergency_sos':
-        triggerSOS('Simulated SOS from demo control panel')
+        triggerSOS('Simulated SOS from demo control panel synced to Supabase')
         break
       case 'abnormal_reading':
         addHealthReading({
-          patient_id: 'patient-001',
+          patient_id: 'e1a1b1c1-0001-4000-8000-000000000001',
           metric_type: 'blood_pressure_systolic',
           value: 165,
           unit: 'mmHg',
           recorded_at: new Date().toISOString(),
         })
         addNotification({
-          user_id: 'user-patient-001',
-          title: '⚠️ Abnormal Reading',
-          message: 'Blood pressure systolic reading of 165 mmHg is above the configured threshold (140 mmHg).',
+          user_id: 'd1a1b1c1-0001-4000-8000-000000000001',
+          title: '⚠️ Abnormal Reading (Supabase Sync)',
+          message: 'Blood pressure systolic reading of 165 mmHg is above threshold.',
           type: 'health_alert',
         })
         break
       case 'low_stock':
         setMedications(prev =>
-          prev.map(m =>
-            m.id === 'med-004' ? { ...m, stock_count: 2 } : m
-          )
+          prev.map((m, idx) => (idx === 0 ? { ...m, stock_count: 2 } : m))
         )
-        addNotification({
-          user_id: 'user-patient-001',
-          title: '💊 Low Medicine Stock',
-          message: 'Calcium + Vitamin D3 has only 2 tablets remaining!',
-          type: 'system',
-        })
         break
       case 'overdue_task':
-        setCareTasks(prev =>
-          prev.map(t =>
-            t.status === 'pending' ? { ...t, status: 'overdue' as const } : t
-          )
-        )
-        addNotification({
-          user_id: 'user-caregiver-001',
-          title: '📋 Overdue Task',
-          message: 'A care task is now overdue. Please check your task list.',
-          type: 'care_task',
-        })
+        if (careTasks.length > 0) {
+          updateTaskStatus(careTasks[0].id, 'overdue')
+        }
         break
     }
 
     setSimulationEvents(prev =>
-      prev.map(s => s.id === simEvent.id ? { ...s, processed: true } : s)
+      prev.map(s => (s.id === simEvent.id ? { ...s, processed: true } : s))
     )
-  }, [medicationLogs, addHealthReading, addNotification, triggerFallDetection, triggerSOS, updateMedicationLog])
+  }, [medicationLogs, careTasks, addHealthReading, addNotification, triggerFallDetection, triggerSOS, updateMedicationLog, updateTaskStatus])
 
   const clearSimulationEvents = useCallback(() => {
     setSimulationEvents([])
   }, [])
 
-  // === Computed Values ===
+  // === Computed ===
   const getAdherenceRate = useCallback(() => {
     const completedLogs = medicationLogs.filter(l => l.status !== 'upcoming')
     const taken = completedLogs.filter(l => l.status === 'taken' || l.status === 'late').length
-    return calculateAdherence(taken, completedLogs.length)
+    return calculateAdherence(taken, completedLogs.length || 1)
   }, [medicationLogs])
 
   const getTodaysMedications = useCallback(() => {
@@ -320,8 +429,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [medicationLogs])
 
   const getUnreadNotificationCount = useCallback(() => {
-    if (!currentUser) return 0
-    return notifications.filter(n => n.user_id === currentUser.id && !n.read_at).length
+    if (!currentUser) return notifications.filter(n => !n.read_at).length
+    return notifications.filter(n => (!n.user_id || n.user_id === currentUser.id) && !n.read_at).length
   }, [notifications, currentUser])
 
   const getCareIntelligenceScore = useCallback((): CareIntelligenceScore => {
@@ -355,11 +464,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, [getAdherenceRate, careTasks, emergencyEvents, healthReadings])
 
-  const getPatientProfiles = useCallback(() => DEMO_PATIENT_PROFILES, [])
-  const getCareRelationships = useCallback(() => DEMO_CARE_RELATIONSHIPS, [])
-  const getEmergencyContacts = useCallback(() => DEMO_EMERGENCY_CONTACTS, [])
-  const getAppointments = useCallback(() => DEMO_APPOINTMENTS, [])
-  const getAIInsights = useCallback(() => DEMO_AI_INSIGHTS, [])
+  const getPatientProfiles = useCallback(() => patientProfiles, [patientProfiles])
+  const getCareRelationships = useCallback(() => careRelationships, [careRelationships])
+  const getEmergencyContacts = useCallback(() => emergencyContacts, [emergencyContacts])
+  const getAppointments = useCallback(() => appointments, [appointments])
+  const getAIInsights = useCallback(() => aiInsights, [aiInsights])
 
   const value: AppContextType = {
     currentUser,
@@ -371,8 +480,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
     notifications,
     careTasks,
     simulationEvents,
+    patientProfiles,
+    careRelationships,
+    emergencyContacts,
+    appointments,
+    aiInsights,
+    isLiveSupabase,
+    isSyncing,
+    lastSyncedAt,
     login,
     logout,
+    refreshFromSupabase,
     addMedication,
     updateMedicationLog,
     deleteMedication,
