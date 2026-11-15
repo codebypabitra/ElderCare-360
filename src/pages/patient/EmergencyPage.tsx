@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import {
-  AlertTriangle, ShieldAlert, Phone, CheckCircle2, Clock,
-  RefreshCw, UserCheck, Flame, BellRing, HeartPulse
+  AlertTriangle, ShieldAlert, Phone, CheckCircle2,
+  Flame, BellRing, HeartPulse, User
 } from 'lucide-react'
 import { useApp } from '@/context/AppContext'
 import { PageHeader } from '@/components/layout/PageHeader'
@@ -51,65 +51,65 @@ export default function EmergencyPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-[#1C1917]">
       <PageHeader
-        title="Emergency Coordination & SOS Engine"
-        subtitle="Distress escalation, simulated fall detection verification, and caregiver broadcast."
+        title="Aapatkaalin Suraksha & SOS (ଆପାତକାଳୀନ ସୁରକ୍ଷା)"
+        subtitle="Priority emergency escalation, simulated fall detection, and care circle broadcast."
       />
 
-      {/* Main SOS Action Card */}
-      <div className="rounded-3xl border-2 border-red-500/80 bg-gradient-to-b from-red-50/50 via-white to-red-50/30 p-8 text-center shadow-xl shadow-red-500/10 relative overflow-hidden">
+      {/* Main Indian SOS Dignified Action Card */}
+      <div className="rounded-3xl border-2 border-[#FECACA] bg-gradient-to-b from-[#FEF2F2] via-white to-[#FEF2F2] p-8 sm:p-10 text-center shadow-sm relative overflow-hidden">
         <div className="max-w-xl mx-auto">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-red-100 text-red-700 uppercase tracking-widest mb-4">
-            <Flame className="h-4 w-4 text-red-600 animate-pulse" />
-            Immediate Assistance Dispatch
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-black bg-[#FEE2E2] text-[#991B1B] uppercase tracking-widest mb-4 border border-[#FECACA]">
+            <Flame className="h-4 w-4 text-[#DC2626] animate-pulse" />
+            Turant Sahayata (Immediate Dispatch)
           </span>
-          <h2 className="text-3xl sm:text-4xl font-black text-slate-950 tracking-tight mb-2">
-            Patient Distress SOS
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1C1917] tracking-tight mb-2 font-serif">
+            Aapatkaalin SOS Button
           </h2>
-          <p className="text-slate-600 text-sm mb-8">
-            Pressing this button activates a priority emergency event and immediately dials / messages all 3 registered care circle members.
+          <p className="text-[#57534E] text-sm mb-8 leading-relaxed">
+            Pressing this button initiates an urgent broadcast to your daughter <strong>Priya (Bengaluru)</strong>, attendant <strong>Sunita</strong>, and <strong>Dr. Anil Sharma</strong>.
           </p>
 
           <button
             onClick={() => setSosModalOpen(true)}
-            className="group relative inline-flex h-36 w-36 sm:h-44 sm:w-44 items-center justify-center rounded-full bg-gradient-to-tr from-red-700 via-red-600 to-rose-500 text-white font-black text-xl sm:text-2xl shadow-2xl shadow-red-600/50 hover:scale-105 active:scale-95 transition-all cursor-pointer border-4 border-white"
+            className="group relative inline-flex h-40 w-40 sm:h-48 sm:w-48 items-center justify-center rounded-full bg-gradient-to-tr from-[#B91C1C] via-[#DC2626] to-[#EF4444] text-white font-black text-xl sm:text-2xl shadow-xl shadow-[#DC2626]/30 hover:scale-105 active:scale-95 transition-all cursor-pointer border-4 border-white"
           >
-            <span className="absolute inset-0 rounded-full bg-red-600 animate-ping opacity-25 pointer-events-none"></span>
+            <span className="absolute inset-0 rounded-full bg-[#DC2626] animate-ping opacity-20 pointer-events-none"></span>
             <div className="flex flex-col items-center">
               <ShieldAlert className="h-10 w-10 sm:h-12 sm:w-12 mb-1" />
               <span>SOS</span>
-              <span className="text-[10px] font-bold tracking-widest text-red-100 uppercase">Emergency</span>
+              <span className="text-[10px] font-bold tracking-widest text-red-100 uppercase">सहायता</span>
             </div>
           </button>
 
-          <p className="text-xs text-slate-400 mt-6 font-medium">
-            Protected by false-trigger confirmation · Compliant with DPDP emergency safety standards
+          <p className="text-xs text-[#78716C] mt-8 font-medium">
+            Protected by false-alarm confirmation · Aligned with India Senior Citizen Safety Guidelines
           </p>
         </div>
       </div>
 
       {/* Fall Detection Sensor Simulation Card */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
+      <div className="rounded-3xl border border-[#EAE3D8] bg-white p-6 sm:p-7 shadow-xs">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
           <div>
-            <div className="flex items-center gap-2">
-              <div className="p-2 rounded-xl bg-amber-100 text-amber-700">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-[#FFEDD5] text-[#9A3412]">
                 <AlertTriangle className="h-5 w-5" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900">
-                Accelerometer Fall Detection Simulation
+              <h3 className="text-lg font-bold text-[#1C1917] font-serif">
+                Accelerometer Fall Detection Simulation (ଗତି ସେନ୍ସର)
               </h3>
             </div>
-            <p className="text-xs text-slate-500 mt-1">
-              Simulates a sudden high-velocity downward acceleration event followed by immobility.
+            <p className="text-xs text-[#78716C] mt-1">
+              Simulates a sudden high-velocity downward fall followed by lack of movement.
             </p>
           </div>
 
           {!fallActive && (
             <button
               onClick={startFallSimulation}
-              className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20 transition-all cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-[#F59E0B] hover:bg-[#D97706] text-[#1C1917] font-black text-xs shadow-xs transition-all cursor-pointer"
             >
               Simulate Motion Fall Event
             </button>
@@ -118,31 +118,31 @@ export default function EmergencyPage() {
 
         {/* Active Fall Countdown Banner */}
         {fallActive && fallCountdown !== null && (
-          <div className="p-6 rounded-2xl bg-amber-50 border-2 border-amber-400 text-center space-y-4 animate-pulse">
-            <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-amber-500 text-slate-950 font-black text-2xl shadow-lg">
+          <div className="p-6 rounded-2xl bg-[#FFFBEB] border-2 border-[#FCD34D] text-center space-y-4 animate-pulse">
+            <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-[#F59E0B] text-[#1C1917] font-black text-2xl shadow-sm">
               {fallCountdown}s
             </div>
             <div>
-              <h4 className="text-xl font-black text-amber-950">POTENTIAL FALL IMPACT DETECTED!</h4>
-              <p className="text-sm text-amber-900 mt-1">
-                Mr. Ramesh, are you unhurt? If you do not respond, your caregiver will be notified in {fallCountdown} seconds.
+              <h4 className="text-xl font-black text-[#78350F] font-serif">POTENTIAL FALL IMPACT DETECTED!</h4>
+              <p className="text-sm text-[#92400E] mt-1">
+                Ramesh Ji, are you unhurt? If you do not respond, your caregiver Sunita and Priya will be alerted in {fallCountdown} seconds.
               </p>
             </div>
             <div className="flex justify-center gap-3">
               <button
                 onClick={cancelFall}
-                className="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm shadow-md"
+                className="px-6 py-3 rounded-xl bg-[#059669] hover:bg-[#047857] text-white font-black text-sm shadow-sm cursor-pointer"
               >
-                I AM OK (Dismiss Alarm) ✓
+                MAIN THEEK HOON (I AM OK) ✓
               </button>
               <button
                 onClick={() => {
                   triggerFallDetection()
                   cancelFall()
                 }}
-                className="px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-black text-sm shadow-md"
+                className="px-6 py-3 rounded-xl bg-[#DC2626] hover:bg-[#B91C1C] text-white font-black text-sm shadow-sm cursor-pointer"
               >
-                I NEED HELP (Escalate Now)
+                SAHAYATA CHAHIYE (ESCALATE NOW)
               </button>
             </div>
           </div>
@@ -152,26 +152,26 @@ export default function EmergencyPage() {
       {/* Grid: Registered Emergency Contacts & Live Incident History */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Emergency Contacts */}
-        <div className="lg:col-span-1 rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
-          <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2 mb-4">
-            <Phone className="h-5 w-5 text-blue-600" />
-            Registered Care Contacts
+        <div className="lg:col-span-1 rounded-3xl border border-[#EAE3D8] bg-white p-6 sm:p-7 shadow-xs">
+          <h3 className="text-base font-bold text-[#1C1917] font-serif flex items-center gap-2 mb-4">
+            <Phone className="h-5 w-5 text-[#C2410C]" />
+            Aapatkaalin Parivaar Contacts
           </h3>
           <div className="space-y-3">
             {contacts.map(c => (
-              <div key={c.id} className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex items-center justify-between">
+              <div key={c.id} className="p-4 rounded-2xl border border-[#EAE3D8] bg-[#FAF8F5] flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-bold text-slate-900">{c.contact_name}</p>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
+                    <p className="text-sm font-bold text-[#1C1917]">{c.contact_name}</p>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#FFEDD5] text-[#9A3412]">
                       Priority {c.priority}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500">{c.relationship} · {c.phone}</p>
+                  <p className="text-xs text-[#78716C] mt-0.5">{c.relationship} · {c.phone}</p>
                 </div>
                 <a
                   href={`tel:${c.phone}`}
-                  className="p-2.5 rounded-xl bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors"
+                  className="p-2.5 rounded-xl bg-[#ECFDF5] text-[#047857] hover:bg-[#D1FAE5] transition-colors"
                   title="Direct Call"
                 >
                   <Phone className="h-4 w-4" />
@@ -182,15 +182,15 @@ export default function EmergencyPage() {
         </div>
 
         {/* Emergency Events Log */}
-        <div className="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
-          <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2 mb-4">
-            <BellRing className="h-5 w-5 text-red-600" />
-            Emergency Incident Audit Log
+        <div className="lg:col-span-2 rounded-3xl border border-[#EAE3D8] bg-white p-6 sm:p-7 shadow-xs">
+          <h3 className="text-base font-bold text-[#1C1917] font-serif flex items-center gap-2 mb-4">
+            <BellRing className="h-5 w-5 text-[#DC2626]" />
+            Aapatkaalin Incident Audit Log
           </h3>
 
           <div className="space-y-3">
             {emergencyEvents.length === 0 ? (
-              <p className="text-sm text-slate-500 py-8 text-center">No emergency incidents recorded.</p>
+              <p className="text-sm text-[#78716C] py-8 text-center">No emergency incidents recorded. All safe!</p>
             ) : (
               emergencyEvents.map(event => {
                 const isOpen = event.status === 'open'
@@ -200,33 +200,33 @@ export default function EmergencyPage() {
                 return (
                   <div
                     key={event.id}
-                    className={`p-4 rounded-xl border transition-all ${
+                    className={`p-4 rounded-2xl border transition-all ${
                       isOpen
-                        ? 'bg-red-50/60 border-red-300'
+                        ? 'bg-[#FEF2F2] border-[#FECACA]'
                         : isAck
-                        ? 'bg-amber-50/50 border-amber-200'
-                        : 'bg-slate-50 border-slate-200'
+                        ? 'bg-[#FFFBEB] border-[#FDE68A]'
+                        : 'bg-[#FAF8F5] border-[#EAE3D8]'
                     }`}
                   >
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                       <div>
                         <div className="flex items-center gap-2">
                           <span className={`text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full ${
-                            isOpen ? 'bg-red-600 text-white' :
-                            isAck ? 'bg-amber-500 text-white' :
-                            'bg-emerald-600 text-white'
+                            isOpen ? 'bg-[#DC2626] text-white' :
+                            isAck ? 'bg-[#F59E0B] text-white' :
+                            'bg-[#059669] text-white'
                           }`}>
                             {event.status}
                           </span>
-                          <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+                          <span className="text-xs font-bold text-[#1C1917] uppercase tracking-wide">
                             {event.event_type.replace('_', ' ')}
                           </span>
                         </div>
-                        <p className="text-sm font-semibold text-slate-900 mt-1">
+                        <p className="text-sm font-semibold text-[#1C1917] mt-1">
                           {event.description || 'Distress Event Triggered'}
                         </p>
-                        <p className="text-xs text-slate-500 mt-0.5">
-                          Triggered: {formatDate(event.created_at)} at{' '}
+                        <p className="text-xs text-[#78716C] mt-0.5">
+                          Time: {formatDate(event.created_at)} at{' '}
                           {new Date(event.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
@@ -235,7 +235,7 @@ export default function EmergencyPage() {
                         {isOpen && (
                           <button
                             onClick={() => acknowledgeEmergency(event.id)}
-                            className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold"
+                            className="px-3.5 py-1.5 rounded-xl bg-[#F59E0B] hover:bg-[#D97706] text-[#1C1917] text-xs font-bold cursor-pointer"
                           >
                             Acknowledge
                           </button>
@@ -243,13 +243,13 @@ export default function EmergencyPage() {
                         {!isResolved && (
                           <button
                             onClick={() => resolveEmergency(event.id)}
-                            className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold"
+                            className="px-3.5 py-1.5 rounded-xl bg-[#059669] hover:bg-[#047857] text-white text-xs font-bold cursor-pointer"
                           >
                             Resolve Event ✓
                           </button>
                         )}
                         {isResolved && (
-                          <span className="text-xs font-semibold text-emerald-700 flex items-center gap-1">
+                          <span className="text-xs font-semibold text-[#047857] flex items-center gap-1">
                             <CheckCircle2 className="h-4 w-4" /> Incident Cleared
                           </span>
                         )}
@@ -265,30 +265,30 @@ export default function EmergencyPage() {
 
       {/* SOS Confirmation Modal */}
       {sosModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border-4 border-red-600 text-center space-y-4">
-            <div className="h-16 w-16 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto animate-bounce">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1C1917]/60 backdrop-blur-xs">
+          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border-4 border-[#DC2626] text-center space-y-4">
+            <div className="h-16 w-16 rounded-full bg-[#FEE2E2] text-[#DC2626] flex items-center justify-center mx-auto animate-bounce">
               <ShieldAlert className="h-10 w-10" />
             </div>
-            <h3 className="text-2xl font-black text-slate-950">CONFIRM EMERGENCY DISPATCH</h3>
-            <p className="text-sm text-slate-600">
-              Are you sure you want to trigger the SOS alarm? This will immediately broadcast to family, caregiver, and clinical staff.
+            <h3 className="text-2xl font-black text-[#1C1917] font-serif">CONFIRM EMERGENCY DISPATCH</h3>
+            <p className="text-sm text-[#57534E]">
+              Are you sure you want to trigger the SOS alarm? This will immediately broadcast distress messages to Priya, Sunita, and Dr. Sharma.
             </p>
             <div className="pt-2 flex flex-col gap-3">
               <button
                 onClick={() => {
-                  triggerSOS('Patient pressed emergency distress SOS button')
+                  triggerSOS('Patient Ramesh Ji pressed emergency distress SOS button')
                   setSosModalOpen(false)
                 }}
-                className="w-full py-4 rounded-xl bg-red-600 hover:bg-red-700 text-white font-black text-base shadow-lg cursor-pointer"
+                className="w-full py-4 rounded-2xl bg-[#DC2626] hover:bg-[#B91C1C] text-white font-black text-base shadow-lg cursor-pointer"
               >
-                YES, BROADCAST DISTRESS ALERT NOW
+                HAAN, TURANT SOS BHEJEIN
               </button>
               <button
                 onClick={() => setSosModalOpen(false)}
-                className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm cursor-pointer"
+                className="w-full py-2.5 rounded-2xl bg-[#F5F1EB] hover:bg-[#EAE3D8] text-[#44403C] font-bold text-sm cursor-pointer"
               >
-                Cancel (False Alarm)
+                Galti Se Daba (Cancel False Alarm)
               </button>
             </div>
           </div>

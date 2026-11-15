@@ -1,16 +1,14 @@
 import { useState } from 'react'
 import {
   Pill, Plus, AlertTriangle, CheckCircle2, Clock, Trash2,
-  Calendar, RotateCcw, Filter, AlertCircle, Sparkles
+  Calendar, RotateCcw, Filter, AlertCircle, Sparkles, Coffee, Sun, Moon
 } from 'lucide-react'
 import { useApp } from '@/context/AppContext'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
-import { Select } from '@/components/ui/Select'
 import { ProgressRing } from '@/components/ui/ProgressRing'
 import { formatTime, formatDate } from '@/lib/utils'
-import type { DoseStatus } from '@/types'
 
 export default function MedicationsPage() {
   const {
@@ -46,10 +44,10 @@ export default function MedicationsPage() {
     if (!name || !dosage) return
 
     addMedication({
-      patient_id: 'patient-001',
+      patient_id: 'e1a1b1c1-0001-4000-8000-000000000001',
       medicine_name: name,
       dosage,
-      instructions: instructions || 'Take with water after meals',
+      instructions: instructions || 'Subah naashte ke baad paani ke saath',
       start_date: startDate,
       end_date: endDate || undefined,
       status: 'active',
@@ -57,7 +55,6 @@ export default function MedicationsPage() {
       refill_threshold: parseInt(refillThreshold) || 7,
     })
 
-    // Reset & close
     setName('')
     setDosage('')
     setInstructions('')
@@ -66,36 +63,36 @@ export default function MedicationsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-[#1C1917]">
       <PageHeader
-        title="Medication Intelligence"
-        subtitle="Schedules, stock alerts, missed-dose escalation and verification."
+        title="Dawai Niyam & Inventory (ଔଷଧ ତାଲିକା)"
+        subtitle="Medicine schedules, meal-time reminders, stock refill alerts, and missed-dose escalations."
         action={
           <button
             onClick={() => setModalOpen(true)}
-            className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm flex items-center gap-2 shadow-sm transition-all"
+            className="px-4 py-2.5 rounded-2xl bg-[#C2410C] hover:bg-[#9A3412] text-white font-bold text-xs flex items-center gap-2 shadow-xs transition-all cursor-pointer"
           >
             <Plus className="h-4 w-4" />
-            Add Medication
+            Nayi Dawai Jodein (Add Medicine)
           </button>
         }
       />
 
       {/* Adherence & Stock Summary Banner */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div className="md:col-span-2 rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col sm:flex-row items-center gap-6">
+        <div className="md:col-span-2 rounded-3xl border border-[#EAE3D8] bg-white p-6 sm:p-7 shadow-xs flex flex-col sm:flex-row items-center gap-6">
           <div className="shrink-0">
-            <ProgressRing value={adherence} size={110} strokeWidth={10} label="Adherence" />
+            <ProgressRing value={adherence} size={110} strokeWidth={10} label="Niyamit" color="#C2410C" />
           </div>
           <div>
-            <div className="flex items-center gap-2 text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">
+            <div className="flex items-center gap-2 text-xs font-bold text-[#C2410C] uppercase tracking-wider mb-1">
               <Sparkles className="h-4 w-4" />
               Smart Adherence Telemetry
             </div>
-            <h3 className="text-lg font-bold text-slate-900">
-              {adherence >= 85 ? 'Excellent Routine Consistency' : 'Care Circle Intervention Recommended'}
+            <h3 className="text-lg font-bold text-[#1C1917] font-serif">
+              {adherence >= 85 ? 'Uttam Niyamitata (Excellent Routine)' : 'Care Circle Intervention Recommended'}
             </h3>
-            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+            <p className="text-xs text-[#78716C] mt-1 leading-relaxed">
               Calculated using: [Recorded as taken / Total doses due] × 100.
               Late doses are highlighted separately to ensure caregiver accuracy.
             </p>
@@ -103,59 +100,59 @@ export default function MedicationsPage() {
         </div>
 
         {/* Low Stock Warning Card */}
-        <div className="rounded-2xl border border-amber-200 bg-amber-50/50 p-6 flex flex-col justify-between">
+        <div className="rounded-3xl border border-[#FED7AA] bg-[#FFF7ED] p-6 flex flex-col justify-between">
           <div>
-            <div className="flex items-center gap-2 text-amber-800 font-bold text-sm mb-2">
-              <AlertTriangle className="h-5 w-5 text-amber-600" />
-              Stock & Refill Telemetry
+            <div className="flex items-center gap-2 text-[#9A3412] font-bold text-sm mb-2">
+              <AlertTriangle className="h-5 w-5 text-[#EA580C]" />
+              Dawai Stock & Refill Alerts
             </div>
             <div className="space-y-2 mt-3">
               {medications.filter(m => (m.stock_count || 0) <= (m.refill_threshold || 7)).map(m => (
-                <div key={m.id} className="text-xs flex justify-between items-center text-amber-900 font-medium bg-amber-100/60 px-3 py-1.5 rounded-lg">
-                  <span>{m.medicine_name}</span>
-                  <span className="font-bold text-red-600">{m.stock_count} pills left (Refill Soon)</span>
+                <div key={m.id} className="text-xs flex justify-between items-center text-[#9A3412] font-medium bg-white/80 border border-[#FED7AA] px-3 py-1.5 rounded-xl">
+                  <span className="font-bold">{m.medicine_name}</span>
+                  <span className="text-[#DC2626] font-bold">{m.stock_count} bache hain (Refill Soon)</span>
                 </div>
               ))}
               {medications.filter(m => (m.stock_count || 0) <= (m.refill_threshold || 7)).length === 0 && (
-                <p className="text-xs text-emerald-700 font-medium">All medicines have sufficient supply.</p>
+                <p className="text-xs text-[#047857] font-medium">All medicines have sufficient supply.</p>
               )}
             </div>
           </div>
-          <p className="text-[11px] text-amber-700/80 mt-4">Automatic alerts sent to caregiver when stock drops under 7 doses.</p>
+          <p className="text-[11px] text-[#9A3412]/80 mt-4">Automated notification sent to Priya & Sunita when supply drops below 7 doses.</p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
+      <div className="flex items-center gap-2 border-b border-[#EAE3D8] pb-2">
         <button
           onClick={() => setActiveTab('active')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTab === 'active'
-              ? 'bg-blue-600 text-white shadow-xs'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-[#1C1917] text-white shadow-xs'
+              : 'text-[#57534E] hover:bg-[#F5F1EB]'
           }`}
         >
           Active Prescriptions ({medications.filter(m => m.status === 'active').length})
         </button>
         <button
           onClick={() => setActiveTab('all')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTab === 'all'
-              ? 'bg-blue-600 text-white shadow-xs'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-[#1C1917] text-white shadow-xs'
+              : 'text-[#57534E] hover:bg-[#F5F1EB]'
           }`}
         >
           All History ({medications.length})
         </button>
         <button
           onClick={() => setActiveTab('logs')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTab === 'logs'
-              ? 'bg-blue-600 text-white shadow-xs'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-[#1C1917] text-white shadow-xs'
+              : 'text-[#57534E] hover:bg-[#F5F1EB]'
           }`}
         >
-          Dose Occurrence Logs ({medicationLogs.length})
+          Dose Execution Logs ({medicationLogs.length})
         </button>
       </div>
 
@@ -169,62 +166,62 @@ export default function MedicationsPage() {
             return (
               <div
                 key={med.id}
-                className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs flex flex-col justify-between hover:border-blue-300 transition-all"
+                className="rounded-3xl border border-[#EAE3D8] bg-white p-6 shadow-xs flex flex-col justify-between hover:border-[#FED7AA] transition-all"
               >
                 <div>
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                      <div className="h-11 w-11 rounded-2xl bg-[#FFEDD5] text-[#9A3412] flex items-center justify-center font-bold">
                         <Pill className="h-5 w-5" />
                       </div>
                       <div>
-                        <h4 className="text-base font-bold text-slate-900">{med.medicine_name}</h4>
-                        <span className="text-xs font-semibold text-blue-600">{med.dosage}</span>
+                        <h4 className="text-base font-bold text-[#1C1917] font-serif">{med.medicine_name}</h4>
+                        <span className="text-xs font-semibold text-[#C2410C]">{med.dosage}</span>
                       </div>
                     </div>
                     <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase ${
                       med.status === 'active'
-                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                        : 'bg-slate-100 text-slate-600'
+                        ? 'bg-[#DCFCE7] text-[#15803D] border border-[#BBF7D0]'
+                        : 'bg-[#F5F1EB] text-[#78716C]'
                     }`}>
                       {med.status}
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100 mb-3">
-                    {med.instructions || 'Take as advised'}
+                  <p className="text-xs text-[#57534E] bg-[#FAF8F5] p-3 rounded-2xl border border-[#EAE3D8] mb-3 leading-relaxed">
+                    {med.instructions || 'Subah naashte ke baad paani ke saath lein'}
                   </p>
 
                   {/* Scheduled times */}
                   <div className="space-y-1.5 mb-3">
-                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Scheduled Times</p>
+                    <p className="text-[10px] font-bold text-[#A8A29E] uppercase tracking-wider">Scheduled Times (समय)</p>
                     <div className="flex flex-wrap gap-1.5">
                       {medSchedules.map(s => (
-                        <span key={s.id} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-bold">
+                        <span key={s.id} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-[#FFF7ED] text-[#9A3412] text-xs font-bold border border-[#FED7AA]">
                           <Clock className="h-3 w-3" />
                           {formatTime(s.scheduled_time)} ({s.frequency})
                         </span>
                       ))}
                       {medSchedules.length === 0 && (
-                        <span className="text-xs text-slate-400">Daily routine</span>
+                        <span className="text-xs text-[#A8A29E]">Daily routine</span>
                       )}
                     </div>
                   </div>
 
                   {/* Stock status */}
-                  <div className="flex items-center justify-between text-xs pt-3 border-t border-slate-100">
-                    <span className="text-slate-500">Remaining Stock:</span>
-                    <span className={`font-bold ${isLowStock ? 'text-red-600' : 'text-slate-900'}`}>
-                      {med.stock_count || 0} pills {isLowStock && '⚠️ Low'}
+                  <div className="flex items-center justify-between text-xs pt-3 border-t border-[#EAE3D8]">
+                    <span className="text-[#78716C]">Remaining Stock:</span>
+                    <span className={`font-bold ${isLowStock ? 'text-[#DC2626]' : 'text-[#1C1917]'}`}>
+                      {med.stock_count || 0} tablets {isLowStock && '⚠️ Kam bachi hai'}
                     </span>
                   </div>
                 </div>
 
-                <div className="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-[11px] text-slate-400">Since {formatDate(med.start_date)}</span>
+                <div className="pt-4 mt-3 border-t border-[#EAE3D8] flex items-center justify-between">
+                  <span className="text-[11px] text-[#A8A29E]">From {formatDate(med.start_date)}</span>
                   <button
                     onClick={() => deleteMedication(med.id)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                    className="p-1.5 rounded-lg text-[#A8A29E] hover:text-[#DC2626] hover:bg-[#FEF2F2] transition-colors cursor-pointer"
                     title="Remove medication"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -236,54 +233,53 @@ export default function MedicationsPage() {
         </div>
       ) : (
         /* Occurrence Logs Table */
-        <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-xs">
-          <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
-            <h4 className="text-sm font-bold text-slate-900">Audit-Ready Dose Execution History</h4>
-            <span className="text-xs text-slate-500">Includes timestamp verification</span>
+        <div className="rounded-3xl border border-[#EAE3D8] bg-white overflow-hidden shadow-xs">
+          <div className="p-5 border-b border-[#EAE3D8] bg-[#FAF8F5] flex justify-between items-center">
+            <h4 className="text-sm font-bold text-[#1C1917] font-serif">Audit-Ready Dose Execution History</h4>
+            <span className="text-xs text-[#78716C]">Includes timestamp verification</span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-500 uppercase border-b border-slate-200">
+              <thead className="bg-[#FAF8F5] text-[#78716C] uppercase border-b border-[#EAE3D8]">
                 <tr>
-                  <th className="p-3.5 font-bold">Scheduled Time</th>
-                  <th className="p-3.5 font-bold">Medication</th>
-                  <th className="p-3.5 font-bold">Dosage</th>
-                  <th className="p-3.5 font-bold">Logged Status</th>
-                  <th className="p-3.5 font-bold">Recorded At</th>
-                  <th className="p-3.5 font-bold text-right">Action</th>
+                  <th className="p-4 font-bold">Scheduled Time</th>
+                  <th className="p-4 font-bold">Medication</th>
+                  <th className="p-4 font-bold">Dosage</th>
+                  <th className="p-4 font-bold">Logged Status</th>
+                  <th className="p-4 font-bold">Recorded At</th>
+                  <th className="p-4 font-bold text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#EAE3D8]">
                 {medicationLogs.slice(0, 20).map(log => {
                   return (
-                    <tr key={log.id} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="p-3.5 font-semibold text-slate-900">
+                    <tr key={log.id} className="hover:bg-[#FAF8F5]/80 transition-colors">
+                      <td className="p-4 font-semibold text-[#1C1917]">
                         {new Date(log.scheduled_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}{' '}
-                        <span className="text-slate-400 text-[11px]">({formatDate(log.scheduled_at)})</span>
+                        <span className="text-[#A8A29E] text-[11px]">({formatDate(log.scheduled_at)})</span>
                       </td>
-                      <td className="p-3.5 font-bold text-slate-900">
+                      <td className="p-4 font-bold text-[#1C1917]">
                         {log.medication?.medicine_name || 'Prescription Dose'}
                       </td>
-                      <td className="p-3.5 text-slate-600">{log.medication?.dosage || 'Standard'}</td>
-                      <td className="p-3.5">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full font-bold uppercase text-[10px] ${
-                          log.status === 'taken' ? 'bg-emerald-100 text-emerald-800' :
-                          log.status === 'late' ? 'bg-amber-100 text-amber-800' :
-                          log.status === 'missed' ? 'bg-red-100 text-red-800' :
-                          log.status === 'skipped' ? 'bg-slate-100 text-slate-700' :
-                          'bg-blue-100 text-blue-800'
+                      <td className="p-4 text-[#57534E]">{log.medication?.dosage || 'Standard'}</td>
+                      <td className="p-4">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full font-bold uppercase text-[10px] ${
+                          log.status === 'taken' ? 'bg-[#DCFCE7] text-[#15803D]' :
+                          log.status === 'late' ? 'bg-[#FEF3C7] text-[#B45309]' :
+                          log.status === 'missed' ? 'bg-[#FEE2E2] text-[#B91C1C]' :
+                          'bg-[#E0F2FE] text-[#0369A1]'
                         }`}>
                           {log.status}
                         </span>
                       </td>
-                      <td className="p-3.5 text-slate-500">
+                      <td className="p-4 text-[#78716C]">
                         {log.recorded_at ? new Date(log.recorded_at).toLocaleTimeString() : '—'}
                       </td>
-                      <td className="p-3.5 text-right">
+                      <td className="p-4 text-right">
                         {log.status === 'upcoming' && (
                           <button
                             onClick={() => updateMedicationLog(log.id, 'taken')}
-                            className="px-2.5 py-1 rounded-md bg-blue-600 text-white font-bold hover:bg-blue-700"
+                            className="px-3 py-1 rounded-xl bg-[#C2410C] text-white font-bold hover:bg-[#9A3412] cursor-pointer"
                           >
                             Mark Taken
                           </button>
@@ -291,7 +287,7 @@ export default function MedicationsPage() {
                         {log.status === 'missed' && (
                           <button
                             onClick={() => updateMedicationLog(log.id, 'late')}
-                            className="px-2.5 py-1 rounded-md bg-slate-800 text-white font-bold hover:bg-slate-900"
+                            className="px-3 py-1 rounded-xl bg-[#1C1917] text-white font-bold hover:bg-[#292524] cursor-pointer"
                           >
                             Take Late
                           </button>
@@ -307,38 +303,38 @@ export default function MedicationsPage() {
       )}
 
       {/* Add Medication Modal */}
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="Prescribe / Add Medication" size="md">
+      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="Prescribe / Add Medication (नयी दवाई जोड़ें)" size="md">
         <form onSubmit={handleAddMedication} className="space-y-4">
           <Input
-            label="Medicine Name"
-            placeholder="e.g. Amlodipine, Metformin"
+            label="Dawai ka Naam (Medicine Name)"
+            placeholder="e.g. Amlodipine, Metformin, Telmisartan"
             value={name}
             onChange={e => setName(e.target.value)}
             required
           />
           <Input
-            label="Dosage"
+            label="Khurak (Dosage)"
             placeholder="e.g. 5mg, 500mg, 1 tablet"
             value={dosage}
             onChange={e => setDosage(e.target.value)}
             required
           />
           <Input
-            label="Instructions"
-            placeholder="e.g. Take with water after breakfast"
+            label="Instructions / Nirdesh"
+            placeholder="e.g. Subah naashte ke baad paani ke saath"
             value={instructions}
             onChange={e => setInstructions(e.target.value)}
           />
           <div className="grid grid-cols-2 gap-3">
             <Input
-              label="Start Date"
+              label="Shuru Hone ki Taarikh"
               type="date"
               value={startDate}
               onChange={e => setStartDate(e.target.value)}
               required
             />
             <Input
-              label="End Date (Optional)"
+              label="Antim Taarikh (Optional)"
               type="date"
               value={endDate}
               onChange={e => setEndDate(e.target.value)}
@@ -346,13 +342,13 @@ export default function MedicationsPage() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <Input
-              label="Current Stock Count"
+              label="Current Tablet Count"
               type="number"
               value={stockCount}
               onChange={e => setStockCount(e.target.value)}
             />
             <Input
-              label="Refill Alert Limit"
+              label="Refill Alert Level"
               type="number"
               value={refillThreshold}
               onChange={e => setRefillThreshold(e.target.value)}
@@ -362,15 +358,15 @@ export default function MedicationsPage() {
             <button
               type="button"
               onClick={() => setModalOpen(false)}
-              className="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-xs"
+              className="px-4 py-2.5 rounded-xl border border-[#EAE3D8] text-[#57534E] font-semibold text-xs cursor-pointer"
             >
-              Cancel
+              Radd Karein (Cancel)
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/20"
+              className="px-5 py-2.5 rounded-xl bg-[#C2410C] hover:bg-[#9A3412] text-white font-bold text-xs shadow-xs cursor-pointer"
             >
-              Save Schedule
+              Surakshit Karein (Save Dawai)
             </button>
           </div>
         </form>

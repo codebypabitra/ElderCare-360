@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import {
   HeartPulse, Pill, Activity, ShieldAlert, Users, Bot,
-  ArrowRight, CheckCircle2, Sparkles, Smartphone, Award, Stethoscope, Radio
+  ArrowRight, CheckCircle2, Sparkles, Award, Stethoscope, Radio, Heart
 } from 'lucide-react'
 import { useApp } from '@/context/AppContext'
 import type { UserRole } from '@/types'
@@ -19,20 +19,20 @@ export default function Landing() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-blue-500 selection:text-white">
+    <div className="min-h-screen bg-[#FAF8F5] text-[#1C1917] selection:bg-[#FED7AA] selection:text-[#9A3412]">
       {/* Top Navbar */}
-      <nav className="border-b border-slate-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+      <nav className="border-b border-[#EAE3D8] bg-[#FAF8F5]/90 backdrop-blur-md sticky top-0 z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-blue-700 to-blue-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+            <div className="h-11 w-11 rounded-2xl bg-gradient-to-tr from-[#C2410C] via-[#EA580C] to-[#F59E0B] flex items-center justify-center text-white shadow-md shadow-[#EA580C]/20 shrink-0">
               <HeartPulse className="h-6 w-6" />
             </div>
             <div>
-              <span className="text-xl font-black tracking-tight text-slate-900">
-                ElderCare <span className="text-blue-600">360</span>
+              <span className="text-2xl font-black tracking-tight text-[#1C1917] font-serif">
+                ElderCare <span className="text-[#C2410C]">360</span>
               </span>
-              <span className="hidden sm:inline-block ml-2 text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-semibold">
-                Hackathon Blueprint Edition
+              <span className="hidden sm:inline-block ml-3 text-[11px] px-2.5 py-0.5 rounded-full bg-[#FFEDD5] text-[#9A3412] font-bold border border-[#FED7AA]">
+                Ayush & DPDP Compliant · ଭାରତୀୟ ସେବା
               </span>
             </div>
           </div>
@@ -42,91 +42,156 @@ export default function Landing() {
                 login('patient')
                 navigate('/demo')
               }}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100 transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-white text-[#44403C] border border-[#EAE3D8] hover:bg-[#F5F1EB] transition-colors cursor-pointer"
             >
-              <Sparkles className="h-4 w-4 text-amber-600" />
-              Live Simulation Lab
+              <Sparkles className="h-3.5 w-3.5 text-[#EA580C]" />
+              Simulation Lab (Judge Hub)
             </button>
             <button
               onClick={() => navigate('/login')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-sm shadow-blue-600/30 transition-all hover:scale-[1.02]"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#1C1917] text-white hover:bg-[#292524] transition-all cursor-pointer shadow-sm"
             >
-              Access Portal
+              Enter Portal
               <ArrowRight className="h-4 w-4" />
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28 bg-gradient-to-b from-blue-50/50 via-white to-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-100/80 text-blue-700 font-semibold text-xs mb-6 border border-blue-200/60 shadow-xs">
-              <Radio className="h-3.5 w-3.5 text-blue-600 animate-pulse" />
-              AI-Powered Preventive Elderly Care Ecosystem
+      {/* Claude Style Editorial Hero */}
+      <section className="relative overflow-hidden pt-16 pb-20 lg:pt-24 lg:pb-28">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FFEDD5] text-[#9A3412] font-bold text-xs mb-8 border border-[#FED7AA]">
+            <Radio className="h-3.5 w-3.5 text-[#EA580C] animate-pulse" />
+            Empowering Seniors & Connecting Indian Families Across Cities
+          </div>
+
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-[#1C1917] tracking-tight leading-[1.1] font-serif">
+            Smarter Seva. <br />
+            <span className="text-[#C2410C] italic font-serif">Safer Living.</span> <br />
+            Connected Parivaar.
+          </h1>
+
+          <p className="mt-8 text-lg sm:text-xl text-[#57534E] leading-relaxed max-w-3xl mx-auto font-normal">
+            An AI-powered preventive healthcare ecosystem unifying daily medication adherence,
+            vital telemetry, simulated fall detection, and regional voice assistance in
+            <strong className="text-[#1C1917]"> English, हिन्दी, and ଓଡ଼ିଆ</strong> for Indian seniors living alone.
+          </p>
+
+          {/* Persona Demo Launchers */}
+          <div className="mt-12 p-6 sm:p-8 rounded-3xl bg-white border border-[#EAE3D8] shadow-sm text-left">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+              <div>
+                <h3 className="text-sm font-extrabold uppercase tracking-wider text-[#A8A29E]">
+                  Interactive Ecosystem Roles — Select Any Persona to Enter
+                </h3>
+                <p className="text-xs text-[#78716C] mt-0.5">
+                  Experience how the same patient record connects across all four roles in real time.
+                </p>
+              </div>
+              <span className="text-xs font-bold text-[#059669] bg-[#ECFDF5] px-3 py-1 rounded-full border border-[#A7F3D0] shrink-0">
+                ⚡ Supabase Realtime Telemetry Connected
+              </span>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-950 tracking-tight leading-tight sm:leading-none">
-              Smarter Care. <br />
-              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-600 bg-clip-text text-transparent">
-                Safer Living.
-              </span>{' '}
-              Connected Families.
-            </h1>
-            <p className="mt-6 text-lg sm:text-xl text-slate-600 leading-relaxed font-normal">
-              Not just another reminder app — an integrated care engine unifying medication adherence,
-              continuous vital telemetry, simulated fall escalation, and multi-lingual regional AI support
-              for seniors and their care circles.
-            </p>
 
-            {/* Role Demo Quick Launchers */}
-            <div className="mt-10 p-4 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-xl shadow-slate-200/50">
-              <p className="text-xs uppercase tracking-wider font-bold text-slate-400 mb-4">
-                Explore The Working Ecosystem — Select A Role To Launch Instantly
-              </p>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <button
-                  onClick={() => handleQuickLogin('patient')}
-                  className="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-blue-200 bg-blue-50/60 hover:bg-blue-100 hover:border-blue-400 text-slate-800 font-bold transition-all group cursor-pointer"
-                >
-                  <div className="h-10 w-10 rounded-full bg-blue-600 text-white flex items-center justify-center mb-2 shadow-sm group-hover:scale-110 transition-transform">
-                    <HeartPulse className="h-5 w-5" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Persona 1: Ramesh Ji */}
+              <div
+                onClick={() => handleQuickLogin('patient')}
+                className="p-5 rounded-2xl border-2 border-[#FED7AA] bg-[#FFF7ED]/50 hover:bg-[#FFF7ED] hover:border-[#EA580C] transition-all cursor-pointer group flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="h-11 w-11 rounded-xl bg-[#EA580C] text-white flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
+                      <Heart className="h-5 w-5" />
+                    </div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#FFEDD5] text-[#9A3412]">
+                      Senior Patient
+                    </span>
                   </div>
-                  <span className="text-sm font-bold text-blue-950">Mr. Ramesh</span>
-                  <span className="text-xs text-blue-600 font-medium">Elderly Patient</span>
+                  <h4 className="text-base font-bold text-[#1C1917]">Ramesh Kumar Ji</h4>
+                  <p className="text-xs text-[#78716C] mt-0.5">Age 72 · Bhubaneswar, Odisha</p>
+                  <p className="text-xs text-[#57534E] mt-3 leading-relaxed">
+                    Simplified interface with large buttons, daily pill checklist, and Odia voice companion.
+                  </p>
+                </div>
+                <button className="mt-4 w-full py-2 rounded-xl bg-white border border-[#FED7AA] text-[#9A3412] text-xs font-bold flex items-center justify-center gap-1 group-hover:bg-[#EA580C] group-hover:text-white transition-colors">
+                  Enter as Ramesh Ji <ArrowRight className="h-3.5 w-3.5" />
                 </button>
+              </div>
 
-                <button
-                  onClick={() => handleQuickLogin('family')}
-                  className="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-indigo-200 bg-indigo-50/60 hover:bg-indigo-100 hover:border-indigo-400 text-slate-800 font-bold transition-all group cursor-pointer"
-                >
-                  <div className="h-10 w-10 rounded-full bg-indigo-600 text-white flex items-center justify-center mb-2 shadow-sm group-hover:scale-110 transition-transform">
-                    <Users className="h-5 w-5" />
+              {/* Persona 2: Priya */}
+              <div
+                onClick={() => handleQuickLogin('family')}
+                className="p-5 rounded-2xl border-2 border-[#EAE3D8] bg-white hover:bg-[#FAF8F5] hover:border-[#292524] transition-all cursor-pointer group flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="h-11 w-11 rounded-xl bg-[#1C1917] text-white flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
+                      <Users className="h-5 w-5" />
+                    </div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#F5F1EB] text-[#44403C]">
+                      Remote Family
+                    </span>
                   </div>
-                  <span className="text-sm font-bold text-indigo-950">Priya Kumar</span>
-                  <span className="text-xs text-indigo-600 font-medium">Family Caregiver</span>
+                  <h4 className="text-base font-bold text-[#1C1917]">Priya Kumar</h4>
+                  <p className="text-xs text-[#78716C] mt-0.5">Daughter · Bengaluru Tech</p>
+                  <p className="text-xs text-[#57534E] mt-3 leading-relaxed">
+                    Remote peace-of-mind portal tracking missed doses, Care Intelligence Score, and vitals.
+                  </p>
+                </div>
+                <button className="mt-4 w-full py-2 rounded-xl bg-[#F5F1EB] text-[#292524] text-xs font-bold flex items-center justify-center gap-1 group-hover:bg-[#1C1917] group-hover:text-white transition-colors">
+                  Enter as Priya <ArrowRight className="h-3.5 w-3.5" />
                 </button>
+              </div>
 
-                <button
-                  onClick={() => handleQuickLogin('caregiver')}
-                  className="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-emerald-200 bg-emerald-50/60 hover:bg-emerald-100 hover:border-emerald-400 text-slate-800 font-bold transition-all group cursor-pointer"
-                >
-                  <div className="h-10 w-10 rounded-full bg-emerald-600 text-white flex items-center justify-center mb-2 shadow-sm group-hover:scale-110 transition-transform">
-                    <Award className="h-5 w-5" />
+              {/* Persona 3: Sunita */}
+              <div
+                onClick={() => handleQuickLogin('caregiver')}
+                className="p-5 rounded-2xl border-2 border-[#A7F3D0] bg-[#ECFDF5]/50 hover:bg-[#ECFDF5] hover:border-[#059669] transition-all cursor-pointer group flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="h-11 w-11 rounded-xl bg-[#059669] text-white flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
+                      <Award className="h-5 w-5" />
+                    </div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#D1FAE5] text-[#065F46]">
+                      Seva Attendant
+                    </span>
                   </div>
-                  <span className="text-sm font-bold text-emerald-950">Sunita Devi</span>
-                  <span className="text-xs text-emerald-600 font-medium">Nurse / Attendant</span>
+                  <h4 className="text-base font-bold text-[#1C1917]">Sunita Devi</h4>
+                  <p className="text-xs text-[#78716C] mt-0.5">Elder Care Assistant</p>
+                  <p className="text-xs text-[#57534E] mt-3 leading-relaxed">
+                    Daily shift checklist for morning medicine supervision, BP recording, and walk assistance.
+                  </p>
+                </div>
+                <button className="mt-4 w-full py-2 rounded-xl bg-white border border-[#A7F3D0] text-[#065F46] text-xs font-bold flex items-center justify-center gap-1 group-hover:bg-[#059669] group-hover:text-white transition-colors">
+                  Enter as Sunita <ArrowRight className="h-3.5 w-3.5" />
                 </button>
+              </div>
 
-                <button
-                  onClick={() => handleQuickLogin('doctor')}
-                  className="flex flex-col items-center justify-center p-4 rounded-xl border-2 border-purple-200 bg-purple-50/60 hover:bg-purple-100 hover:border-purple-400 text-slate-800 font-bold transition-all group cursor-pointer"
-                >
-                  <div className="h-10 w-10 rounded-full bg-purple-600 text-white flex items-center justify-center mb-2 shadow-sm group-hover:scale-110 transition-transform">
-                    <Stethoscope className="h-5 w-5" />
+              {/* Persona 4: Dr. Sharma */}
+              <div
+                onClick={() => handleQuickLogin('doctor')}
+                className="p-5 rounded-2xl border-2 border-[#CCFBF1] bg-[#F0FDFA]/50 hover:bg-[#F0FDFA] hover:border-[#0F766E] transition-all cursor-pointer group flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="h-11 w-11 rounded-xl bg-[#0F766E] text-white flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
+                      <Stethoscope className="h-5 w-5" />
+                    </div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#CCFBF1] text-[#115E59]">
+                      Cardiologist
+                    </span>
                   </div>
-                  <span className="text-sm font-bold text-purple-950">Dr. Anil Sharma</span>
-                  <span className="text-xs text-purple-600 font-medium">Cardiologist</span>
+                  <h4 className="text-base font-bold text-[#1C1917]">Dr. Anil Sharma</h4>
+                  <p className="text-xs text-[#78716C] mt-0.5">MD, Senior Physician</p>
+                  <p className="text-xs text-[#57534E] mt-3 leading-relaxed">
+                    AI prescription OCR extractor, 14-day cardiovascular curves, and clinical safety thresholds.
+                  </p>
+                </div>
+                <button className="mt-4 w-full py-2 rounded-xl bg-white border border-[#CCFBF1] text-[#115E59] text-xs font-bold flex items-center justify-center gap-1 group-hover:bg-[#0F766E] group-hover:text-white transition-colors">
+                  Enter as Dr. Anil <ArrowRight className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
@@ -134,149 +199,115 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* 5 Pillars Section */}
-      <section className="py-20 bg-white border-y border-slate-200/80">
+      {/* 5 Core Pillars Section */}
+      <section className="py-20 border-t border-[#EAE3D8] bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-xs uppercase font-extrabold tracking-widest text-blue-600 mb-2">
-              Five Core Innovation Pillars
+            <span className="text-xs font-extrabold uppercase tracking-widest text-[#C2410C]">
+              Panch-Sutra Framework
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1C1917] tracking-tight font-serif mt-2">
+              Five Core Innovations for Elderly Care
             </h2>
-            <p className="text-3xl font-extrabold text-slate-900 tracking-tight sm:text-4xl">
-              Engineered To Address Senior Vulnerabilities
-            </p>
-            <p className="mt-3 text-slate-500 text-base">
-              Connecting daily medication, biometrics, family alerts, and regional AI support into a single closed-loop.
+            <p className="mt-3 text-[#78716C] text-base">
+              Engineered for the realities of Indian nuclear families with aging parents.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Pillar 1 */}
-            <div className="p-7 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-blue-300 hover:shadow-lg hover:shadow-blue-500/5 transition-all">
-              <div className="h-12 w-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-5 font-bold">
+            {/* Pillar 1: Dawai Niyam */}
+            <div className="p-7 rounded-3xl border border-[#EAE3D8] bg-[#FAF8F5] hover:border-[#FED7AA] hover:shadow-md transition-all">
+              <div className="h-12 w-12 rounded-2xl bg-[#FFEDD5] text-[#9A3412] flex items-center justify-center mb-5 font-bold">
                 <Pill className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Smart Medication Engine</h3>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">
-                Automated scheduling, missed-dose escalation rules, stock refill telemetry, and dose verification logs with zero guesswork.
+              <h3 className="text-lg font-bold text-[#1C1917] mb-2 font-serif">1. Dawai Niyam (Medication Intelligence)</h3>
+              <p className="text-[#57534E] text-sm leading-relaxed mb-4">
+                Schedules mapped to Indian eating routines (Naashta, Dophar, Raatri Bhojan) with automated grace periods and missed dose escalations.
               </p>
-              <div className="flex items-center gap-2 text-xs font-semibold text-blue-600">
-                <CheckCircle2 className="h-4 w-4" /> Grace period escalation protocol
+              <div className="flex items-center gap-2 text-xs font-bold text-[#9A3412]">
+                <CheckCircle2 className="h-4 w-4 text-[#EA580C]" /> Zero-guesswork dose verification
               </div>
             </div>
 
-            {/* Pillar 2 */}
-            <div className="p-7 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-emerald-300 hover:shadow-lg hover:shadow-emerald-500/5 transition-all">
-              <div className="h-12 w-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-5 font-bold">
+            {/* Pillar 2: Swasthya Telemetry */}
+            <div className="p-7 rounded-3xl border border-[#EAE3D8] bg-[#FAF8F5] hover:border-[#A7F3D0] hover:shadow-md transition-all">
+              <div className="h-12 w-12 rounded-2xl bg-[#D1FAE5] text-[#065F46] flex items-center justify-center mb-5 font-bold">
                 <Activity className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Health Vitals Intelligence</h3>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">
-                Tracks blood pressure, SpO2, heart rate, blood glucose, and temperature with clinical thresholds and multi-day trend graphs.
+              <h3 className="text-lg font-bold text-[#1C1917] mb-2 font-serif">2. Swasthya Vitals Telemetry</h3>
+              <p className="text-[#57534E] text-sm leading-relaxed mb-4">
+                Continuous tracking of Blood Pressure, SpO2, Heart Rate, and Blood Glucose plotted against ICMR and cardiologist-approved thresholds.
               </p>
-              <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600">
-                <CheckCircle2 className="h-4 w-4" /> Configurable abnormal limits
+              <div className="flex items-center gap-2 text-xs font-bold text-[#065F46]">
+                <CheckCircle2 className="h-4 w-4 text-[#059669]" /> Multi-day physiological trend curves
               </div>
             </div>
 
-            {/* Pillar 3 */}
-            <div className="p-7 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-red-300 hover:shadow-lg hover:shadow-red-500/5 transition-all">
-              <div className="h-12 w-12 rounded-xl bg-red-100 text-red-600 flex items-center justify-center mb-5 font-bold">
+            {/* Pillar 3: Aapatkaalin SOS */}
+            <div className="p-7 rounded-3xl border border-[#EAE3D8] bg-[#FAF8F5] hover:border-[#FECACA] hover:shadow-md transition-all">
+              <div className="h-12 w-12 rounded-2xl bg-[#FEE2E2] text-[#991B1B] flex items-center justify-center mb-5 font-bold">
                 <ShieldAlert className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Emergency SOS & Fall Engine</h3>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">
-                Single-touch distress siren and simulated accelerometer fall detector with interactive 30s confirmation countdown and family escalation.
+              <h3 className="text-lg font-bold text-[#1C1917] mb-2 font-serif">3. Aapatkaalin SOS & Fall Detection</h3>
+              <p className="text-[#57534E] text-sm leading-relaxed mb-4">
+                Single-touch priority distress broadcast and simulated accelerometer fall detector with a 15-second safety confirmation countdown.
               </p>
-              <div className="flex items-center gap-2 text-xs font-semibold text-red-600">
-                <CheckCircle2 className="h-4 w-4" /> Multi-tier emergency broadcasting
+              <div className="flex items-center gap-2 text-xs font-bold text-[#991B1B]">
+                <CheckCircle2 className="h-4 w-4 text-[#DC2626]" /> Multi-tier caregiver emergency cascade
               </div>
             </div>
 
-            {/* Pillar 4 */}
-            <div className="p-7 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-indigo-300 hover:shadow-lg hover:shadow-indigo-500/5 transition-all">
-              <div className="h-12 w-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-5 font-bold">
+            {/* Pillar 4: Parivaar Seva */}
+            <div className="p-7 rounded-3xl border border-[#EAE3D8] bg-[#FAF8F5] hover:border-[#EAE3D8] hover:shadow-md transition-all">
+              <div className="h-12 w-12 rounded-2xl bg-[#F5F1EB] text-[#292524] flex items-center justify-center mb-5 font-bold">
                 <Users className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Connected Care Circle</h3>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">
-                Coordinates elderly patients with remote children, visiting attendants, and consulting physicians through shared task boards.
+              <h3 className="text-lg font-bold text-[#1C1917] mb-2 font-serif">4. Parivaar & Care Circle Hub</h3>
+              <p className="text-[#57534E] text-sm leading-relaxed mb-4">
+                Connects senior parents, out-of-town working children, visiting attendants, and consulting doctors with DPDP-compliant consent.
               </p>
-              <div className="flex items-center gap-2 text-xs font-semibold text-indigo-600">
-                <CheckCircle2 className="h-4 w-4" /> Role-based access & DPDP compliance
+              <div className="flex items-center gap-2 text-xs font-bold text-[#292524]">
+                <CheckCircle2 className="h-4 w-4 text-[#78716C]" /> Digital Personal Data Protection (India)
               </div>
             </div>
 
-            {/* Pillar 5 */}
-            <div className="p-7 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-purple-300 hover:shadow-lg hover:shadow-purple-500/5 transition-all">
-              <div className="h-12 w-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-5 font-bold">
+            {/* Pillar 5: Regional AI Sahayak */}
+            <div className="p-7 rounded-3xl border border-[#EAE3D8] bg-[#FAF8F5] hover:border-[#CCFBF1] hover:shadow-md transition-all">
+              <div className="h-12 w-12 rounded-2xl bg-[#CCFBF1] text-[#115E59] flex items-center justify-center mb-5 font-bold">
                 <Bot className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Regional AI Companion</h3>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">
-                Context-aware conversational assistant grounded in the patient's records. Supports English, Hindi, and Odia voice instructions.
+              <h3 className="text-lg font-bold text-[#1C1917] mb-2 font-serif">5. Regional AI Sahayak (ଓଡ଼ିଆ/हिन्दी)</h3>
+              <p className="text-[#57534E] text-sm leading-relaxed mb-4">
+                Context-aware conversational companion grounded strictly in the patient's records. Supports spoken Odia and Hindi with text-to-speech.
               </p>
-              <div className="flex items-center gap-2 text-xs font-semibold text-purple-600">
-                <CheckCircle2 className="h-4 w-4" /> Odia (ଓଡ଼ିଆ) + Hindi speech synthesis
+              <div className="flex items-center gap-2 text-xs font-bold text-[#115E59]">
+                <CheckCircle2 className="h-4 w-4 text-[#0F766E]" /> Authentic Odia & Hindi speech synthesis
               </div>
             </div>
 
-            {/* Pillar 6 - The differentiator */}
-            <div className="p-7 rounded-2xl border border-amber-300 bg-gradient-to-br from-amber-50/50 to-orange-50/30 hover:shadow-lg hover:shadow-amber-500/10 transition-all">
-              <div className="h-12 w-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mb-5 font-bold">
-                <Sparkles className="h-6 w-6" />
+            {/* Pillar 6: Differentiator */}
+            <div className="p-7 rounded-3xl border-2 border-[#FED7AA] bg-[#FFF7ED] hover:shadow-md transition-all">
+              <div className="h-12 w-12 rounded-2xl bg-[#FFEDD5] text-[#9A3412] flex items-center justify-center mb-5 font-bold">
+                <Sparkles className="h-6 w-6 text-[#EA580C]" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Care Intelligence Engine™</h3>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">
-                The composite scoring algorithm synthesizing adherence (40%), pending tasks (25%), open alerts (20%), and telemetry freshness (15%).
+              <h3 className="text-lg font-bold text-[#1C1917] mb-2 font-serif">Care Intelligence Score™</h3>
+              <p className="text-[#57534E] text-sm leading-relaxed mb-4">
+                Our algorithmic differentiator: a transparent composite index synthesizing medication adherence, open tasks, alert clearance, and freshness.
               </p>
-              <div className="flex items-center gap-2 text-xs font-semibold text-amber-700">
-                <CheckCircle2 className="h-4 w-4" /> Transparent evidence-backed scoring
+              <div className="flex items-center gap-2 text-xs font-bold text-[#9A3412]">
+                <CheckCircle2 className="h-4 w-4 text-[#EA580C]" /> Grounded, non-hallucinatory evidence
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Architecture & Live Demo Call to Action */}
-      <section className="py-16 bg-slate-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
-            <div>
-              <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-500/20 text-blue-300 border border-blue-400/30">
-                Hackathon Simulation Ready
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mt-4">
-                Ready to review live events & emergency scenarios?
-              </h2>
-              <p className="text-slate-400 mt-2 max-w-xl text-base">
-                Use our built-in Simulation Lab to fire simulated falls, trigger missed doses, inject abnormal blood pressure readings, and observe system reactions in real-time.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              <button
-                onClick={() => {
-                  login('patient')
-                  navigate('/demo')
-                }}
-                className="px-6 py-3.5 rounded-xl text-sm font-bold bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 shadow-lg shadow-blue-500/30 transition-all"
-              >
-                Launch Simulation Lab
-              </button>
-              <button
-                onClick={() => navigate('/login')}
-                className="px-6 py-3.5 rounded-xl text-sm font-bold bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700 transition-all"
-              >
-                Switch Login Persona
-              </button>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 py-8 text-center text-xs text-slate-500 bg-white">
-        <p className="font-semibold text-slate-700">ElderCare 360 · Innovation-Focused Execution Blueprint</p>
-        <p className="mt-1">Designed for Hackathons & DPDP India Alignment · Multi-Role Autonomous Coordination</p>
+      <footer className="border-t border-[#EAE3D8] py-12 text-center text-xs text-[#78716C] bg-[#FAF8F5]">
+        <p className="font-bold text-[#292524] text-sm font-serif">ElderCare 360 · Smarter Seva. Safer Living.</p>
+        <p className="mt-1">
+          Designed for Indian Senior Care & DPDP Act Alignment · Dedicated to Elders Living with Dignity
+        </p>
       </footer>
     </div>
   )
